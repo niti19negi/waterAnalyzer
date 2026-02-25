@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>💧 Smart Water Quality Dashboard</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Tom Select (searchable dropdown) -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
+<style>
+
+body{
+    font-family: Arial;
+    background:#f0f4f8;
+}
+
+.container{
+    max-width:900px;
+    margin:40px auto;
+    background:white;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1{
+    text-align:center;
+    color:#0077b6;
+}
+
+.card{
+    display:flex;
+    flex-direction:column;
+    margin-bottom:30px;
+}
+
+button{
+    padding:12px;
+    background:#0077b6;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#023e8a;
+}
+
+/* Result card */
+.result-card{
+    padding:20px;
+    border-radius:10px;
+    margin-top:20px;
+}
+
+/* SAFE / UNSAFE color */
+.safe{
+    background:#d4edda;
+    border-left:8px solid green;
+}
+
+.unsafe{
+    background:#f8d7da;
+    border-left:8px solid red;
+}
+
+table{
+    width:100%;
+    margin-top:15px;
+}
+
+td,th{
+    padding:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>💧 Smart Water Quality Dashboard</h1>
+
+<!-- FORM -->
+<form method="POST" class="card">
+
+<label>Select Location</label>
+
+<select name="state" id="state" required>
+<option value="">Select Location</option>
+{% for state in states %}
+<option value="{{ state }}">{{ state }}</option>
+{% endfor %}
+</select>
+
+<button type="submit">Check Water Quality</button>
+
+</form>
+
+<!-- RESULT -->
+{% if result %}
+
+<div class="result-card {% if result.quality == 'Safe' %}safe{% else %}unsafe{% endif %}">
+
+<h2>Water Quality Result</h2>
+
+<table>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>pH</td><td>{{ result.ph }}</td></tr>
+<tr><td>TDS</td><td>{{ result.tds }}</td></tr>
+<tr><td>Turbidity</td><td>{{ result.turbidity }}</td></tr>
+<tr><td>Temperature</td><td>{{ result.temperature }}</td></tr>
+<tr>
+<td><b>Status</b></td>
+<td><b>{{ result.quality }}</b></td>
+</tr>
+</table>
+
+<!-- SMALL BAR GRAPH -->
+<div style="width:70%; margin:30px auto;">
+<canvas id="barChart"></canvas>
+</div>
+
+<!-- SMALL DOUGHNUT GRAPH -->
+<div style="width:55%; margin:30px auto;">
+<canvas id="pieChart"></canvas>
+</div>
+
+</div>
+
+{% endif %}
+
+</div>
+
+<script>
+
+/* Searchable dropdown */
+new TomSelect("#state",{
+    create:false,
+    sortField:{field:"text",direction:"asc"}
+});
+
+</script>
+
+{% if result %}
+
+<script>
+
+/* BAR CHART */
+new Chart(document.getElementById("barChart"),{
+    type:"bar",
+    data:{
+        labels:["pH","TDS","Turbidity","Temperature"],
+        datasets:[{
+            label:"Water Parameters",
+            data:[
+                {{ result.ph }},
+                {{ result.tds }},
+                {{ result.turbidity }},
+                {{ result.temperature }}
+            ],
+            backgroundColor:[
+                "#0077b6",
+                "#00b4d8",
+                "#48cae4",
+                "#90e0ef"
+            ],
+            borderRadius:8
+        }]
+    },
+    options:{
+        responsive:true,
+        animation:{duration:1200},
+        hover:{animationDuration:400},
+        plugins:{legend:{display:false}},
+        scales:{y:{beginAtZero:true}}
+    }
+});
+
+/* DOUGHNUT CHART */
+new Chart(document.getElementById("pieChart"),{
+    type:"doughnut",
+    data:{
+        labels:["pH","TDS","Turbidity","Temperature"],
+        datasets:[{
+            data:[
+                {{ result.ph }},
+                {{ result.tds }},
+                {{ result.turbidity }},
+                {{ result.temperature }}
+            ],
+            backgroundColor:[
+                "#f94144",
+                "#f3722c",
+                "#43aa8b",
+                "#577590"
+            ],
+            hoverOffset:25
+        }]
+    },
+    options:{
+        responsive:true,
+        animation:{
+            animateScale:true,
+            duration:1200
+        }
+    }
+});
+
+</script>
+
+{% endif %}
+
+</body>
+</html>
