@@ -1,10 +1,10 @@
-Location,pH,TDS,Turbidity,Status
-Addanki,7.2,430,3.4,SAFE
-Adoni,8.2,540,5.3,UNSAFE
-Akkayapalle,7.1,420,3.1,SAFE
-Alur,6.4,610,6.2,UNSAFE
-Amadalavalasa,7.3,480,4.0,SAFE
-Amalapuram,6.3,630,6.4,UNSAFE
-Anakapalle,7.2,430,3.4,SAFE
-Anantapur,8.3,520,5.1,UNSAFE
-Anaparthi,7.0,460,4.3,SAFE
+Location,pH,TDS,Turbidity,Status, Temperature
+Addanki,7.2,430,3.4,SAFE, 32
+Adoni,8.2,540,5.3,UNSAFE, 43
+Akkayapalle,7.1,420,3.1,SAFE, 55
+Alur,6.4,610,6.2,UNSAFE, 125
+Amadalavalasa,7.3,480,4.0,SAFE, 22
+Amalapuram,6.3,630,6.4,UNSAFE, 9736
+Anakapalle,7.2,430,3.4,SAFE, 17
+Anantapur,8.3,520,5.1,UNSAFE, 43
+Anaparthi,7.0,460,4.3,SAFE, 28
